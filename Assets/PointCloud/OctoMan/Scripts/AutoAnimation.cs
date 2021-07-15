@@ -9,15 +9,15 @@ public class AutoAnimation : MonoBehaviour
 
 
     //애니메이션 재생여부
-    public bool bigStart;//맨처음 재생되어야됨
-    public bool smallStart;
-    public bool shovelStart;
-    public bool rotateStart;
+    bool bigStart;//맨처음 재생되어야됨
+    bool smallStart;
+    bool shovelStart;
+    bool rotateStart;
 
     //애니메이션 역재생여부
-    public bool smallReverse;
-    public bool shovelReverse;
-    public bool rotateReverse;
+    bool smallReverse;
+    bool shovelReverse;
+    bool rotateReverse;
 
 
 
@@ -36,7 +36,7 @@ public class AutoAnimation : MonoBehaviour
     {
         if(bigStart)
         {
-            //애니메이선 1번레이어(BigArm)의 애니메이션 제어
+            //애니메이선 1번레이어(BigArm) 애니메이션 재생
             if (anim.GetCurrentAnimatorStateInfo(1).normalizedTime < 0.5f)
             {
                 anim.SetFloat("BigArmSpeed", 0.5f);
@@ -56,7 +56,7 @@ public class AutoAnimation : MonoBehaviour
 
 
 
-        //애니메이선 2번레이어(SmallArm)의 애니메이션 제어 1번애니메이션 끝나면 실행
+        //애니메이선 2번레이어(SmallArm) 애니메이션 재생
         if (smallStart)
         {
             if (anim.GetCurrentAnimatorStateInfo(2).normalizedTime < 0.7f)
@@ -75,7 +75,7 @@ public class AutoAnimation : MonoBehaviour
             }
         }
 
-        //애니메이선 3번레이어(Shovel)의 애니메이션 제어 2번애니메이션 끝나면 실행
+        //애니메이선 3번레이어(Shovel) 애니메이션 재생
         if (shovelStart)
         {
             anim.SetFloat("ShovelSpeed", 1.0f);
@@ -87,8 +87,8 @@ public class AutoAnimation : MonoBehaviour
                 rotateStart = true;
             }
         }
-        //회전제어
-        if(rotateStart)
+        //애니메이선 4번레이어(Rotate) 애니메이션 재생
+        if (rotateStart)
         {
             if (anim.GetCurrentAnimatorStateInfo(4).normalizedTime < 0.15f)
             {
@@ -106,7 +106,9 @@ public class AutoAnimation : MonoBehaviour
             }
         }
 
-        //회전끝난후 땅파는모션 나오게 애니메이션 제어
+        
+        //애니메이션 역재생
+        //SmallArm -> Shovel -> Rotate 순
         if(smallReverse)
         {
             if (anim.GetCurrentAnimatorStateInfo(2).normalizedTime > 0.5f)
@@ -133,6 +135,19 @@ public class AutoAnimation : MonoBehaviour
             }
         }
 
+
+        if(rotateReverse)
+        {
+            anim.SetFloat("RotateSpeed", -0.5f);
+            if (anim.GetCurrentAnimatorStateInfo(4).normalizedTime <= 0.0f)
+            {
+                anim.SetFloat("ShovelSpeed", 0.0f);
+                rotateReverse = false;
+
+                //SmallArm 애니메이션부터 애니메이션 반복하도록 설정
+                smallStart = true;
+            }
+        }
 
     }
 }
